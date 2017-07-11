@@ -22,13 +22,14 @@ using namespace std;
 typedef uint32_t uint;
 namespace CoreIR {
 
-typedef enum {AINT=0,ASTRING=1,ATYPE=2,ABOOL=3} Param;
+typedef enum {ABOOL=0,AUINT=1,AINT=2,ASTRING=3,ATYPE=4} Param;
 
 //other
 class Namespace;
 class Context;
 struct Error;
 class Arg;
+class ArgUint;
 class ArgInt;
 class ArgString;
 class ArgType;

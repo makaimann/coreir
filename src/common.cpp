@@ -18,6 +18,8 @@ bool isNumber(string s) {
 
 string Param2Str(Param genparam) {
   switch(genparam) {
+    case ABOOL : return "bool";
+    case AUINT : return "uint";
     case AINT : return "int";
     case ASTRING : return "string";
     case ATYPE : return "type";
@@ -25,6 +27,8 @@ string Param2Str(Param genparam) {
   }
 }
 Param Str2Param(string s) {
+  if (s=="bool") return ABOOL;
+  if (s=="uint") return AUINT;
   if (s=="int") return AINT;
   if (s=="string") return ASTRING;
   if (s=="type") return ATYPE;
@@ -60,7 +64,7 @@ void checkArgsAreParams(Args args, Params params) {
   for (auto const &param : params) {
     auto const &arg = args.find(param.first);
     ASSERT(arg != args.end(), "Arg Not found: " + param.first );
-    ASSERT(arg->second->getKind() == param.second,"Param type mismatch for: " + param.first);
+    ASSERT(arg->second->getKind() == param.second,"Param type mismatch for: " + param.first + " (" + Param2Str(arg->second->getKind()) + "!=" + Param2Str(param.second) + ")");
   }
 }
 

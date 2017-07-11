@@ -92,6 +92,7 @@ class Context {
     
     //Factory functions for args
     Arg* argBool(bool b);
+    Arg* argUint(uint u);
     Arg* argInt(int i);
     Arg* argString(string s);
     Arg* argType(Type* t);

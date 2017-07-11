@@ -54,6 +54,18 @@ class ArgBool : public Arg {
     json toJson();
 };
 
+class ArgUint : public Arg {
+  uint u;
+  public :
+    typedef uint type;
+    ArgUint(uint u) : Arg(AUINT), u(u) {}
+    static bool classof(const Arg* arg) {return arg->getKind()==AUINT;}
+    string toString() const {return to_string(u);}
+    type get() { return u;}
+    bool operator==(const Arg& r) const;
+    json toJson();
+};
+
 class ArgInt : public Arg {
   int i;
   public :
@@ -65,6 +77,7 @@ class ArgInt : public Arg {
     bool operator==(const Arg& r) const;
     json toJson();
 };
+
 
 class ArgString : public Arg {
   string str;

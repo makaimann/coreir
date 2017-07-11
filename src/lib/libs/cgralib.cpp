@@ -7,23 +7,16 @@ using namespace CoreIR;
 Namespace* CoreIRLoadLibrary_cgralib(Context* c) {
   
   Namespace* cgralib = c->newNamespace("cgralib");
+  Namespace* stdlib = c->newNamespace("stdlib");
   
-  //Unary op declaration
-  Params widthParams = {{"width",AINT}};
-  cgralib->newTypeGen("unary",widthParams,[](Context* c, Args args) { 
-    uint width = args.at("width")->get<ArgInt>();
-    return c->Record({
-      {"in",c->BitIn()->Arr(width)},
-      {"out",c->Bit()->Arr(width)},
-    });
-  });
+  Params widthParams = {{"width",AUINT}};
 
   //PE declaration
-  Params PEGenParams = {{"width",AINT},{"numin",AINT}};
+  Params PEGenParams = {{"width",AUINT},{"numin",AUINT}};
   Params opParams = {{"op",ASTRING}};
   cgralib->newTypeGen("PEType",PEGenParams,[](Context* c, Args args) {
-    uint width = args.at("width")->get<ArgInt>();
-    uint numin = args.at("numin")->get<ArgInt>();
+    uint width = args.at("width")->get<ArgUint>();
+    uint numin = args.at("num_data")->get<ArgUint>();
     return c->Record({
       {"data",c->Record({
         {"in",c->BitIn()->Arr(width)->Arr(numin)},
@@ -37,10 +30,11 @@ Namespace* CoreIRLoadLibrary_cgralib(Context* c) {
   });
   cgralib->newGeneratorDecl("PE",cgralib->getTypeGen("PEType"),PEGenParams,opParams);
 
+
   //Const Declaration
-  Params valueParams = {{"value",AINT}};
+  Params valueParams = {{"value",AUINT}};
   cgralib->newTypeGen("SrcType",widthParams,[](Context* c, Args args) {
-    uint width = args.at("width")->get<ArgInt>();
+    uint width = args.at("width")->get<ArgUint>();
     return c->Record({
       {"out",c->Bit()->Arr(width)}
     });
@@ -48,16 +42,16 @@ Namespace* CoreIRLoadLibrary_cgralib(Context* c) {
   cgralib->newGeneratorDecl("Const",cgralib->getTypeGen("SrcType"),widthParams,valueParams);
 
   //Reg declaration
-  cgralib->newGeneratorDecl("Reg",cgralib->getTypeGen("unary"),widthParams);
+  cgralib->newGeneratorDecl("Reg",stdlib->getTypeGen("unary"),widthParams);
 
   //IO Declaration
   Params modeParams = {{"mode",ASTRING}};
-  cgralib->newGeneratorDecl("IO",cgralib->getTypeGen("unary"),widthParams,modeParams);
+  cgralib->newGeneratorDecl("IO",stdlib->getTypeGen("unary"),widthParams,modeParams);
 
   //Mem declaration
-  Params MemGenParams = {{"width",AINT},{"depth",AINT}};
+  Params MemGenParams = {{"width",AUINT},{"depth",AUINT}};
   cgralib->newTypeGen("MemType",MemGenParams,[](Context* c, Args args) {
-    uint width = args.at("width")->get<ArgInt>();
+    uint width = args.at("width")->get<ArgUint>();
     return c->Record({
       {"addr", c->BitIn()->Arr(width)},
       {"rdata", c->Bit()->Arr(width)},
@@ -73,12 +67,12 @@ Namespace* CoreIRLoadLibrary_cgralib(Context* c) {
   //Declare a TypeGenerator (in global) for linebuffer
   cgralib->newTypeGen(
     "linebuffer_type", //name for the typegen
-    {{"stencil_width",AINT},{"stencil_height",AINT},{"image_width",AINT},{"bitwidth",AINT}}, //generater parameters
+    {{"stencil_width",AUINT},{"stencil_height",AUINT},{"image_width",AUINT},{"bitwidth",AUINT}}, //generater parameters
     [](Context* c, Args args) { //Function to compute type
-      uint stencil_width  = args.at("stencil_width")->get<ArgInt>();
-      uint stencil_height  = args.at("stencil_height")->get<ArgInt>();
-      //uint image_width = args.at("image_width")->get<ArgInt>();
-      uint bitwidth = args.at("bitwidth")->get<ArgInt>();
+      uint stencil_width  = args.at("stencil_width")->get<ArgUint>();
+      uint stencil_height  = args.at("stencil_height")->get<ArgUint>();
+      //uint image_width = args.at("image_width")->get<ArgUint>();
+      uint bitwidth = args.at("bitwidth")->get<ArgUint>();
       return c->Record({
 	  {"in",c->BitIn()->Arr(bitwidth)},
 	  {"out",c->Bit()->Arr(bitwidth)->Arr(stencil_height)->Arr(stencil_width)}
@@ -89,14 +83,14 @@ Namespace* CoreIRLoadLibrary_cgralib(Context* c) {
 
   Generator* linebuffer = cgralib->newGeneratorDecl("Linebuffer",
 					      cgralib->getTypeGen("linebuffer_type"),
-					      {{"stencil_width",AINT},{"stencil_height",AINT},
-					       {"image_width",AINT},{"bitwidth",AINT}});
+					      {{"stencil_width",AUINT},{"stencil_height",AUINT},
+					       {"image_width",AUINT},{"bitwidth",AUINT}});
   
   linebuffer->setGeneratorDefFromFun([](ModuleDef* def,Context* c, Type* t, Args args) {
-    uint stencil_width  = args.at("stencil_width")->get<ArgInt>();
-    uint stencil_height  = args.at("stencil_height")->get<ArgInt>();
-    uint image_width = args.at("image_width")->get<ArgInt>();
-    uint bitwidth = args.at("bitwidth")->get<ArgInt>();
+    uint stencil_width  = args.at("stencil_width")->get<ArgUint>();
+    uint stencil_height  = args.at("stencil_height")->get<ArgUint>();
+    uint image_width = args.at("image_width")->get<ArgUint>();
+    uint bitwidth = args.at("bitwidth")->get<ArgUint>();
     assert((bitwidth & (bitwidth-1)) == 0); //Check if power of 2
     assert(stencil_height > 1);
     assert(stencil_width > 0);

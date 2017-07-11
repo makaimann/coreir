@@ -220,6 +220,11 @@ Arg* Context::argInt(int i) {
   argList.push_back(ga);
   return ga;
 }
+Arg* Context::argUint(uint u) { 
+  Arg* ga = new ArgUint(u); 
+  argList.push_back(ga);
+  return ga;
+}
 Arg* Context::argString(string s) { 
   Arg* ga = new ArgString(s); 
   argList.push_back(ga);

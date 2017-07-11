@@ -249,6 +249,8 @@ Args json2Args(Context* c, Params genparams, json j) {
     Param kind = pmap.second;
     Arg* g;
     switch(kind) {
+      case ABOOL : g = c->argBool(j.at(key).get<bool>()); break;
+      case AUINT : g = c->argUint(j.at(key).get<uint>()); break;
       case AINT : g = c->argInt(j.at(key).get<int>()); break;
       case ASTRING : g = c->argString(j.at(key).get<string>()); break;
       case ATYPE : g = c->argType(json2Type(c,j.at(key))); break;
@@ -601,6 +603,7 @@ json Args2Json(Args args) {
 }
 
 json ArgString::toJson() { return str; }
+json ArgUint::toJson() { return u; }
 json ArgInt::toJson() { return i; }
 json ArgBool::toJson() { return b; }
 json ArgType::toJson() { return t->toJson(); }

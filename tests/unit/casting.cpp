@@ -49,6 +49,17 @@ int main() {
     assert(!dyn_cast<ArgString>(a));
   }
   
+  //Test casting of ArgUint
+  {
+    Arg* a = c->argUint(5);
+    assert(isa<ArgUint>(a));
+    assert(a->get<ArgUint>()==5);
+    ArgUint* ac = cast<ArgUint>(a);
+    assert(dyn_cast<Arg>(ac));
+    assert(dyn_cast<ArgUint>(a));
+    assert(!dyn_cast<ArgString>(a));
+  }
+  
   //Test casting of ArgString
   {
     Arg* a = c->argString("Ross");

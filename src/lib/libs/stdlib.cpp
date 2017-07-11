@@ -16,7 +16,7 @@ Namespace* CoreIRLoadLibrary_stdlib(Context* c) {
   /////////////////////////////////
   // Stdlib Types
   /////////////////////////////////
-  Params widthparams = Params({{"width",AINT}});
+  Params widthparams = Params({{"width",AUINT}});
 
   //Single bit types
   stdlib->newNamedType("clk","clkIn",c->Bit());
@@ -31,7 +31,7 @@ Namespace* CoreIRLoadLibrary_stdlib(Context* c) {
     "binary",
     widthparams,
     [](Context* c, Args args) {
-      uint width = args.at("width")->get<ArgInt>();
+      uint width = args.at("width")->get<ArgUint>();
       return c->Record({
         {"in",c->BitIn()->Arr(width)->Arr(2)},
         {"out",c->Bit()->Arr(width)}
@@ -42,7 +42,7 @@ Namespace* CoreIRLoadLibrary_stdlib(Context* c) {
     "unary",
     widthparams,
     [](Context* c, Args args) {
-      uint width = args.at("width")->get<ArgInt>();
+      uint width = args.at("width")->get<ArgUint>();
       return c->Record({
         {"in",c->BitIn()->Arr(width)},
         {"out",c->Bit()->Arr(width)}
@@ -53,7 +53,7 @@ Namespace* CoreIRLoadLibrary_stdlib(Context* c) {
     "binaryReduce",
     widthparams,
     [](Context* c, Args args) {
-      uint width = args.at("width")->get<ArgInt>();
+      uint width = args.at("width")->get<ArgUint>();
       return c->Record({
         {"in",c->BitIn()->Arr(width)->Arr(2)},
         {"out",c->Bit()}
@@ -64,7 +64,7 @@ Namespace* CoreIRLoadLibrary_stdlib(Context* c) {
     "unaryReduce",
     widthparams,
     [](Context* c, Args args) {
-      uint width = args.at("width")->get<ArgInt>();
+      uint width = args.at("width")->get<ArgUint>();
       return c->Record({
         {"in",c->BitIn()->Arr(width)},
         {"out",c->Bit()}
@@ -76,7 +76,7 @@ Namespace* CoreIRLoadLibrary_stdlib(Context* c) {
     "unaryExpand",
     widthparams,
     [](Context* c, Args args) {
-      uint width = args.at("width")->get<ArgInt>();
+      uint width = args.at("width")->get<ArgUint>();
       return c->Record({
         {"in",c->BitIn()},
         {"out",c->Bit()->Arr(width)}
@@ -88,7 +88,7 @@ Namespace* CoreIRLoadLibrary_stdlib(Context* c) {
     "ternary",
     widthparams,
     [](Context* c, Args args) {
-      uint width = args.at("width")->get<ArgInt>();
+      uint width = args.at("width")->get<ArgUint>();
       return c->Record({
         {"in",c->Record({
           {"data",c->BitIn()->Arr(width)->Arr(2)},
@@ -172,13 +172,13 @@ Namespace* CoreIRLoadLibrary_stdlib(Context* c) {
     "out", 
     widthparams,
     [](Context* c, Args args) {
-      uint width = args.at("width")->get<ArgInt>();
+      uint width = args.at("width")->get<ArgUint>();
       return c->Record({
         {"out",c->Bit()->Arr(width)}
       });
     }
   );
-  stdlib->newGeneratorDecl("const",stdlib->getTypeGen("out"),widthparams,{{"value",AINT}});
+  stdlib->newGeneratorDecl("const",stdlib->getTypeGen("out"),widthparams,{{"value",AUINT}});
   
   /////////////////////////////////
   // Stdlib convert primitives

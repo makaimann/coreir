@@ -15,6 +15,11 @@ bool ArgInt::operator==(const Arg& r) const {
   return this->i == static_cast<const ArgInt&>(r).i;
 }
 
+bool ArgUint::operator==(const Arg& r) const {
+  if (!Arg::operator==(r)) return false;
+  return this->u == static_cast<const ArgUint&>(r).u;
+}
+
 bool ArgString::operator==(const Arg& r) const {
   if (!Arg::operator==(r)) return false;
   return this->str == static_cast<const ArgString&>(r).str;
@@ -68,6 +73,11 @@ size_t std::hash<Args>::operator() (const Args& args) const {
       case ABOOL : {
         bool arg_b = arg->get<ArgBool>();
         hash_combine(hash,arg_b);
+        break;
+      }
+      case AUINT : {
+        int arg_u = arg->get<ArgUint>();
+        hash_combine(hash,arg_u);
         break;
       }
       case AINT : {
