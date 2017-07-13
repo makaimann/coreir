@@ -14,8 +14,7 @@ int main() {
     {"in",c->Array(16,c->BitIn())},
     {"out",c->Array(16,c->Bit())}
   });
- 
-  Args w16({{"width",c->argInt(16)}});
+  Args w16({{"width",c->argUint(16)}});
   Generator* Add = stdlib->getGenerator("add");
   Generator* Mul = stdlib->getGenerator("mul");
   Generator* Const = stdlib->getGenerator("const");
@@ -23,7 +22,7 @@ int main() {
   ModuleDef* def = addmult->newModuleDef();
     def->addInstance("ai",Add,w16);
     def->addInstance("mi",Mul,w16);
-    def->addInstance("ci",Const,w16,{{"value",c->argInt(140)}});
+    def->addInstance("ci",Const,w16,{{"value",c->argUint(140)}});
     
     def->connect("self.in","ai.in.0");
     def->connect("ci.out","ai.in.1");

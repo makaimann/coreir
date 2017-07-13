@@ -29,8 +29,9 @@ int main() {
   cpkeys[0] = "in";
   cpkeys[1] = "out";
   int** cpparams = malloc(2*sizeof(int*));
-  cpparams[0] = 0;
-  cpparams[1] = 0;
+  uint param = COREUintParam;
+  cpparams[0] = 2;
+  cpparams[1] = &param;
 
   void* cp = CORENewMap(c,cpkeys,cpparams,2,STR2PARAM_MAP);
 
@@ -44,8 +45,8 @@ int main() {
   ckeys[0] = "in";
   ckeys[1] = "out";
   COREArg** cargs = malloc(2*sizeof(COREArg*));
-  cargs[0] = COREArgInt(c,13);
-  cargs[1] = COREArgInt(c,13);
+  cargs[0] = COREArgUint(c,13);
+  cargs[1] = COREArgUint(c,13);
 
   void* config = CORENewMap(c,ckeys,cargs,2,STR2ARG_MAP);
 

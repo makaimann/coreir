@@ -13,6 +13,12 @@ extern "C" {
     return static_cast<COREParam>(t->getKind());
   }
   
+  uint COREArgUintGet(COREArg* a) {
+    Arg* arg = rcast<Arg*>(a);
+    //Get will assert if wrong arg kind
+    return arg->get<ArgUint>();
+  }
+  
   int COREArgIntGet(COREArg* a) {
     Arg* arg = rcast<Arg*>(a);
     //Get will assert if wrong arg kind
@@ -24,6 +30,12 @@ extern "C" {
     //Get will assert if wrong arg kind
     const string& s = arg->get<ArgString>();
     return s.c_str();
+  }
+  
+  //Create Arg for uint
+  COREArg* COREArgUint(COREContext* c,uint u) {
+    Arg* ga = rcast<Context*>(c)->argUint(u);
+    return rcast<COREArg*>(ga);
   }
   
   //Create Arg for int
