@@ -28,7 +28,11 @@ void stdlib_state(Context* c, Namespace* stdlib) {
    * Fun: out <= (rst|clr) ? resetval : en ? in : out;
    * Argchecks: 
    */
-  auto regFun = [](Context* c, Args args) { 
+  auto regFun = [](Context* c, Args args) {
+    ASSERT(args.count("width"),"width not found");
+    ASSERT(args.count("clr"),"clr not found");
+    ASSERT(args.count("en"),"en not found");
+    ASSERT(args.count("rst"),"rst not found");
     uint width = args.at("width")->get<ArgInt>();
     bool en = args.at("en")->get<ArgBool>();
     bool clr = args.at("clr")->get<ArgBool>();
@@ -36,6 +40,7 @@ void stdlib_state(Context* c, Namespace* stdlib) {
     assert(!(clr && rst));
 
     RecordParams r({
+        {"clk",c->getNamespace("stdlib")->getNamedType("clkIn")},
         {"in",c->BitIn()->Arr(width)},
         {"out",c->Bit()->Arr(width)}
     });

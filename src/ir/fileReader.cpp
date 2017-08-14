@@ -200,6 +200,7 @@ bool loadFromFile(Context* c, string filename,Module** top) {
             if (jinst.count("configargs")) {
               configargs = json2Args(c,genRef->getConfigParams(),jinst.at("configargs"));
             }
+            cout << "fr: genargs " << Args2Str(genargs) << endl;
             mdef->addInstance(instname,genRef,genargs,configargs);
           }
           else {

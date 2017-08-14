@@ -91,7 +91,7 @@ void stdlib2firrtl(Instantiable* i,FModule& fm) {
     ASSERT(0,"NYI");
   }
   else if (i->getName()=="const") {
-    ASSERT(0,"NYI");
+    return; //Handled in instances
   }
   else if (opmap["binary"].count(i->getName()) 
      || opmap["binaryReduce"].count(i->getName())) {
@@ -107,6 +107,7 @@ void stdlib2firrtl(Instantiable* i,FModule& fm) {
 
 bool Firrtl::runOnInstanceGraphNode(InstanceGraphNode& node) {
   auto i = node.getInstantiable();
+  Context* c = i->getContext();
   string name = i->getName();
   bool isStdlib = i->getNamespace()->getName() == "stdlib";
   if (!isStdlib && isa<Generator>(i)) {
@@ -126,7 +127,10 @@ bool Firrtl::runOnInstanceGraphNode(InstanceGraphNode& node) {
   if (isStdlib) {
     //This ugliness is getting an example of a type for stdlib generator
     //The 5 does not matter because I am throwing away widths anyways
-    Type* t = cast<Generator>(i)->getTypeGen()->createType(i->getContext(),{{"width",i->getContext()->argInt(5)}});
+    if (i->getName()=="reg" || i->getName()=="const") {
+      return false;
+    }
+    Type* t = cast<Generator>(i)->getTypeGen()->createType(c,{{"width",i->getContext()->argInt(5)}});
     fm = new FModule(name,t,true);
     stdlib2firrtl(i,*fm);
   }
@@ -141,6 +145,15 @@ bool Firrtl::runOnInstanceGraphNode(InstanceGraphNode& node) {
     for (auto instmap : def->getInstances()) {
       string mname = nameMap[instmap.second->getInstantiableRef()];
       string iname = instmap.second->getInstname();
+      
+      //Special case for const
+      if (instmap.second->getInstantiableRef() == cast<Instantiable>(c->getNamespace("stdlib")->getGenerator("const"))) {
+        ASSERT(0,"NYI Constants");
+      }
+      if (instmap.second->getInstantiableRef() == cast<Instantiable>(c->getNamespace("stdlib")->getGenerator("reg"))) {
+        ASSERT(0,"NYI Reg");
+      }
+      
       fm->addStmt("inst " + iname + " of " + mname);
     }
     //Then add all connections

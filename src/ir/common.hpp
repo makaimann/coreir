@@ -111,9 +111,6 @@ T join(const A &begin, const A &end, const T &t) {
   return result;
 }
 
-//template<typename container>
-//std::string joinString(const container arr, std::string del);
-
 static unordered_map<std::string,unordered_set<std::string>> opmap({
   {"unary",{"not","neg"}},
   {"unaryReduce",{"andr","orr","xorr"}},
