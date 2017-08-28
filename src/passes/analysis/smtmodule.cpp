@@ -9,25 +9,40 @@ using namespace Passes;
 typedef void (*voidFunctionType)(void);
 
 string SMTModule::toString() {
-  vector<string> pdecs;
+  vector<string> iports;
+	vector<string> odims;
   for (auto pmap : ports) {
     auto port = pmap.second;
-    pdecs.push_back(port.getName() + " () " + "(_ BitVec " + port.dimstr() + ")");
+		cout << port.dirstr() << " " << port.getName() << " " << port.dimstr() << endl;
+		if (port.dirstr() == "input") {
+			iports.push_back(port.getName() + " () " + "(_ BitVec " + port.dimstr() + ")");
+		}
+		else odims.push_back(port.dimstr());
   }
   ostringstream o;
   string tab = "  ";
 
+  o << endl << "(define-fun " << modname << "\n" << tab << join(iports.begin(), iports.end(), string("\n  ")) << endl;
+
+	cout << "odims size: " << odims.size() << endl;
+	cout << "iports size: " << iports.size() << endl;
+
+	if (odims.size() > 0) {
+		o << "(_ BitVec " << odims[0] << "))" << endl;
+	}
+
   //Param declaraions
-  for (auto p : params) {
-    o << tab << "parameter " << p;
-    if (paramDefaults.count(p)) {
-      o << " = " << paramDefaults[p];
-    }
-    o << ";" << endl;
-  }
+  // for (auto p : params) {
+  //   o << tab << "parameter " << p;
+  //   if (paramDefaults.count(p)) {
+  //     o << " = " << paramDefaults[p];
+  //   }
+  //   o << ";" << endl;
+  // }
   o << endl;
   
   for (auto s : stmts) o << s << endl;
+  o << ")" << endl;
   return o.str();
 }
 
@@ -51,6 +66,7 @@ string SMTModule::toInitVarDecString() {
 
 string SMTModule::toInstanceString(Instance* inst) {
   string instname = inst->getInstname();
+  cout << "instname: " << instname << endl;
   Instantiable* iref = inst->getInstantiableRef();
   if (this->gen) {
     ASSERT(inst->isGen(),"DEBUG ME:");
@@ -105,8 +121,9 @@ string SMTModule::toInstanceString(Instance* inst) {
     o << SMTAdd(portstrs.find("in0")->second, portstrs.find("in1")->second, portstrs.find("out")->second);
   else if (mname == "coreir_reg_PE")
     o << SMTRegPE(portstrs.find("in")->second, portstrs.find("clk")->second, portstrs.find("out")->second, portstrs.find("en")->second);
-  else if (mname == "counter")
+  else if (mname == "counter") {
     o << SMTCounter(portstrs.find("clk")->second, portstrs.find("en")->second, portstrs.find("out")->second);
+  }
   else if (mname == "coreir_concat")
     o << SMTConcat(portstrs.find("in0")->second, portstrs.find("in1")->second, portstrs.find("out")->second);
   else if (mname == "coreir_slice") {

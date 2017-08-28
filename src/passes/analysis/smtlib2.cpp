@@ -9,7 +9,7 @@ using namespace Passes;
 namespace {
 
   string CLOCK = "clk";
-  
+
   std::vector<string> check_interface_variable(std::vector<string> variables, SmtBVVar var, SMTModule* smod) {
   if ( find(variables.begin(), variables.end(), var.getName()) == variables.end() ) {
       variables.push_back(var.getName());
@@ -48,7 +48,7 @@ bool Passes::SmtLib2::runOnInstanceGraphNode(InstanceGraphNode& node) {
 
   ModuleDef* def = m->getDef();
 
-  static std::vector<string> variables; 
+  static std::vector<string> variables;
   string tab = "  ";
   for (auto imap : def->getInstances()) {
     string iname = imap.first;
@@ -81,7 +81,7 @@ bool Passes::SmtLib2::runOnInstanceGraphNode(InstanceGraphNode& node) {
 
     variables = check_interface_variable(variables, vleft, smod);
     variables = check_interface_variable(variables, vright, smod);
-    
+
     smod->addStmt(SMTAssign(vleft, vright));
   }
   smod->addStmt(";; END connections definition\n");
@@ -92,7 +92,14 @@ bool Passes::SmtLib2::runOnInstanceGraphNode(InstanceGraphNode& node) {
 void Passes::SmtLib2::writeToStream(std::ostream& os) {
 
   os << "(set-logic QF_BV)" << endl;
-  
+
+	// define operators
+  for (auto mmap : modMap) {
+    if (external.count(mmap.first)==0) {
+      os << mmap.second->toString() << endl;
+    }
+  }
+
   // Print variable declarations
 
   os << ";; Init Variable declarations" << endl;
@@ -101,7 +108,7 @@ void Passes::SmtLib2::writeToStream(std::ostream& os) {
       os << mmap.second->toInitVarDecString() << endl;
     }
   }
-  
+
   os << ";; Variable declarations" << endl;
   for (auto mmap : modMap) {
     if (external.count(mmap.first)==0) {
@@ -115,12 +122,5 @@ void Passes::SmtLib2::writeToStream(std::ostream& os) {
       os << mmap.second->toNextVarDecString() << endl;
     }
   }
-
-  for (auto mmap : modMap) {
-    if (external.count(mmap.first)==0) {
-      os << mmap.second->toString() << endl;
-    }
-  }
-
 
 }
