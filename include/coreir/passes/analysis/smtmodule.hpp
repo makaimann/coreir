@@ -66,6 +66,7 @@ public :
     instname(instname), portname(portname), dim(dim), dir(dir) {}
   string dimstr() {return to_string(dim);}
   string dirstr() { return (dir==Type::DK_In) ? "input" : "output"; }
+  unsigned getDim() { return dim; }
   string getExtractName() { return need_extract ? "((_ extract " + idx + " " + idx + ") " + getName() + ")" : getName();}
   string getName() { return name;}
   string getFullName() { return fullname;}

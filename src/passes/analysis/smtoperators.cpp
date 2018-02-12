@@ -342,12 +342,12 @@ namespace CoreIR {
       string true_res; 
       string false_res;
       
-      true_res  = "(=> (= "+SMTgetCurr(context, in)+" "+one+") ("+SMTgetCurr(context, out)+" #b1))";
-      false_res = "(=> (not (= "+SMTgetCurr(context, in)+" "+one+")) ("+SMTgetCurr(context, out)+" #b0))";
+      true_res  = "(=> (= "+SMTgetCurr(context, in)+" "+one+") (= "+SMTgetCurr(context, out)+" #b1))";
+      false_res = "(=> (not (= "+SMTgetCurr(context, in)+" "+one+")) (= "+SMTgetCurr(context, out)+" #b0))";
       string curr = assert_op("(and "+true_res+" "+false_res+")");
 
-      true_res  = "(=> (= "+SMTgetNext(context, in)+" "+one+") ("+SMTgetNext(context, out)+" #b1))";
-      false_res = "(=> (not (= "+SMTgetNext(context, in)+" "+one+")) ("+SMTgetNext(context, out)+" #b0))";
+      true_res  = "(=> (= "+SMTgetNext(context, in)+" "+one+") (= "+SMTgetNext(context, out)+" #b1))";
+      false_res = "(=> (not (= "+SMTgetNext(context, in)+" "+one+")) (= "+SMTgetNext(context, out)+" #b0))";
       string next = assert_op("(and "+true_res+" "+false_res+")");
       
       return comment + NL + curr + NL + next;
@@ -363,19 +363,20 @@ namespace CoreIR {
       string true_res; 
       string false_res;
       
-      true_res  = "(=> (= "+SMTgetCurr(context, in)+" "+zero+") ("+SMTgetCurr(context, out)+" #b0))";
-      false_res = "(=> (not (= "+SMTgetCurr(context, in)+" "+zero+")) ("+SMTgetCurr(context, out)+" #b1))";
+      true_res  = "(=> (= "+SMTgetCurr(context, in)+" "+zero+") (= "+SMTgetCurr(context, out)+" #b0))";
+      false_res = "(=> (not (= "+SMTgetCurr(context, in)+" "+zero+")) (= "+SMTgetCurr(context, out)+" #b1))";
       string curr = assert_op("(and "+true_res+" "+false_res+")");
 
-      true_res  = "(=> (= "+SMTgetNext(context, in)+" "+zero+") ("+SMTgetNext(context, out)+" #b0))";
-      false_res = "(=> (not (= "+SMTgetNext(context, in)+" "+zero+")) ("+SMTgetNext(context, out)+" #b1))";
+      true_res  = "(=> (= "+SMTgetNext(context, in)+" "+zero+") (= "+SMTgetNext(context, out)+" #b0))";
+      false_res = "(=> (not (= "+SMTgetNext(context, in)+" "+zero+")) (= "+SMTgetNext(context, out)+" #b1))";
       string next = assert_op("(and "+true_res+" "+false_res+")");
       
       return comment + NL + curr + NL + next;
     }
 
     string SMTZext(string context, SmtBVVar in_p, SmtBVVar out_p) {
-      return SMTUop(context, "Zext", "(_ zero_extend 1)", in_p, out_p);
+      int dim = out_p.getDim() - in_p.getDim();
+      return SMTUop(context, "Zext", "(_ zero_extend "+to_string(dim)+")", in_p, out_p);
     }
     
   }
