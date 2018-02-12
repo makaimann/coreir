@@ -193,12 +193,17 @@ namespace CoreIR {
       string clk = clk_p.getPortName();
       string out = out_p.getPortName();
       string comment = ";; SMTReg (in, clk, out) = (" + in + ", " + clk + ", " + out + ")";
+
+      string state_var = SMTgetCurr(context, "state");
+      string state_dec = "(declare-fun " + state_var + " () (_ BitVec " + out_p.dimstr() + "))";
+      string state_ass = assert_op("(= "+state_var+" "+SMTgetNext(context, out)+")");
+        
       string zero = getSMTbits(stoi(out_p.dimstr()), 0);
       string init = assert_op("(= "+SMTgetInit(context, out)+" "+zero+")");
       string trans_1 = "(=> (= (bvand (bvnot " + SMTgetCurr(context, clk) + ") " + SMTgetNext(context, clk) + ") #b1) (= " + SMTgetNext(context, out) + " " + SMTgetCurr(context, in) + "))";
       string trans_2 = "(=> (not (= (bvand (bvnot " + SMTgetCurr(context, clk) + ") " + SMTgetNext(context, clk) + ") #b1)) (= " + SMTgetNext(context, out) + " " + SMTgetCurr(context, out) + "))";
       string trans = assert_op("(and " + trans_1 + " " + trans_2 + ")");
-      return comment + NL + init + NL + trans;
+      return comment + NL + init + NL + trans + NL + state_dec + NL + state_ass;
     }
 
     string SMTRegPE(string context, SmtBVVar in_p, SmtBVVar clk_p, SmtBVVar out_p, SmtBVVar en_p) {
@@ -209,12 +214,17 @@ namespace CoreIR {
       string out = out_p.getPortName();
       string en = en_p.getPortName();
       string comment = ";; SMTRegPE (in, clk, out, en) = (" + in + ", " + clk + ", " + out + ", " + en + ")";
+
+      string state_var = SMTgetCurr(context, "state");
+      string state_dec = "(declare-fun " + state_var + " () (_ BitVec " + out_p.dimstr() + "))";
+      string state_ass = assert_op("(= "+state_var+" "+SMTgetNext(context, out)+")");
+      
       string zero = getSMTbits(stoi(out_p.dimstr()), 0);
       string init = assert_op("(= "+SMTgetInit(context, out)+" "+zero+")");
       string trans_1 = "(=> (= (bvand " + SMTgetCurr(context, en) + " (bvand (bvnot " + SMTgetCurr(context, clk) + ") " + SMTgetNext(context, clk) + ")) #b1) (= " + SMTgetNext(context, out) + " " + SMTgetCurr(context, in) + "))";
       string trans_2 = "(=> (not (= (bvand " + SMTgetCurr(context, en) + " (bvand (bvnot " + SMTgetCurr(context, clk) + ") " + SMTgetNext(context, clk) + ")) #b1)) (= " + SMTgetNext(context, out) + " " + SMTgetCurr(context, out) + "))";
       string trans = assert_op("(and " + trans_1 + " " + trans_2 + ")");
-      return comment + NL + init + NL + trans;
+      return comment + NL + init + NL + trans + NL + state_dec + NL + state_ass;
     }
 
     string SMTClock(string context, SmtBVVar clk_p) {

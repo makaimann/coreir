@@ -43,46 +43,102 @@ in_BUS1_S3_T2
 in_BUS1_S3_T3
 in_BUS1_S3_T4
 # reset
-tile_id
+# tile_id
+
+STATES:
+cbbit0DOLLARprocdffDOLLAR1235reg0$state
+cbbit1DOLLARprocdffDOLLAR1235reg0$state
+cbbit2DOLLARprocdffDOLLAR1235reg0$state
+cbdata0DOLLARprocdffDOLLAR1236reg0$state
+cbdata1DOLLARprocdffDOLLAR1236reg0$state
+sb1bDOLLARprocdffDOLLAR1190reg0$state
+sb1bDOLLARprocdffDOLLAR1191reg0$state
+sb1bDOLLARprocdffDOLLAR1192reg0$state
+sb1bDOLLARprocdffDOLLAR1193reg0$state
+sb1bDOLLARprocdffDOLLAR1194reg0$state
+sb1bDOLLARprocdffDOLLAR1195reg0$state
+sb1bDOLLARprocdffDOLLAR1196reg0$state
+sb1bDOLLARprocdffDOLLAR1197reg0$state
+sb1bDOLLARprocdffDOLLAR1198reg0$state
+sb1bDOLLARprocdffDOLLAR1199reg0$state
+sb1bDOLLARprocdffDOLLAR1200reg0$state
+sb1bDOLLARprocdffDOLLAR1201reg0$state
+sb1bDOLLARprocdffDOLLAR1202reg0$state
+sb1bDOLLARprocdffDOLLAR1203reg0$state
+sb1bDOLLARprocdffDOLLAR1204reg0$state
+sb1bDOLLARprocdffDOLLAR1205reg0$state
+sb1bDOLLARprocdffDOLLAR1206reg0$state
+sb1bDOLLARprocdffDOLLAR1207reg0$state
+sb1bDOLLARprocdffDOLLAR1208reg0$state
+sb1bDOLLARprocdffDOLLAR1209reg0$state
+sb1bDOLLARprocdffDOLLAR1210reg0$state
+sbwideDOLLARprocdffDOLLAR1211reg0$state
+sbwideDOLLARprocdffDOLLAR1212reg0$state
+sbwideDOLLARprocdffDOLLAR1213reg0$state
+sbwideDOLLARprocdffDOLLAR1214reg0$state
+sbwideDOLLARprocdffDOLLAR1215reg0$state
+sbwideDOLLARprocdffDOLLAR1216reg0$state
+sbwideDOLLARprocdffDOLLAR1217reg0$state
+sbwideDOLLARprocdffDOLLAR1218reg0$state
+sbwideDOLLARprocdffDOLLAR1219reg0$state
+sbwideDOLLARprocdffDOLLAR1220reg0$state
+sbwideDOLLARprocdffDOLLAR1221reg0$state
+sbwideDOLLARprocdffDOLLAR1222reg0$state
+sbwideDOLLARprocdffDOLLAR1223reg0$state
+sbwideDOLLARprocdffDOLLAR1224reg0$state
+sbwideDOLLARprocdffDOLLAR1225reg0$state
+sbwideDOLLARprocdffDOLLAR1226reg0$state
+sbwideDOLLARprocdffDOLLAR1227reg0$state
+sbwideDOLLARprocdffDOLLAR1228reg0$state
+sbwideDOLLARprocdffDOLLAR1229reg0$state
+sbwideDOLLARprocdffDOLLAR1230reg0$state
+sbwideDOLLARprocdffDOLLAR1231reg0$state
+testpeDOLLARprocdffDOLLAR1150reg0$state
+testpeDOLLARprocdffDOLLAR1151reg0$state
+testpetestoptregaDOLLARprocdffDOLLAR1147reg0$state
+testpetestoptregbDOLLARprocdffDOLLAR1147reg0$state
+testpetestoptregdDOLLARprocdffDOLLAR1148reg0$state
+testpetestoptregeDOLLARprocdffDOLLAR1148reg0$state
+testpetestoptregfDOLLARprocdffDOLLAR1148reg0$state
 
 OUTPUTS:
-out_BUS16_S0_T0
-out_BUS16_S0_T1
-out_BUS16_S0_T2
-out_BUS16_S0_T3
-out_BUS16_S0_T4
+# out_BUS16_S0_T0
+# out_BUS16_S0_T1
+# out_BUS16_S0_T2
+# out_BUS16_S0_T3
+# out_BUS16_S0_T4
 out_BUS16_S1_T0
-out_BUS16_S1_T1
-out_BUS16_S1_T2
-out_BUS16_S1_T3
-out_BUS16_S1_T4
-out_BUS16_S2_T0
-out_BUS16_S2_T1
-out_BUS16_S2_T2
-out_BUS16_S2_T3
-out_BUS16_S2_T4
-out_BUS16_S3_T0
-out_BUS16_S3_T1
-out_BUS16_S3_T2
-out_BUS16_S3_T3
-out_BUS16_S3_T4
-out_BUS1_S0_T0
-out_BUS1_S0_T1
-out_BUS1_S0_T2
-out_BUS1_S0_T3
-out_BUS1_S0_T4
-out_BUS1_S1_T0
-out_BUS1_S1_T1
-out_BUS1_S1_T2
-out_BUS1_S1_T3
-out_BUS1_S1_T4
-out_BUS1_S2_T0
-out_BUS1_S2_T1
-out_BUS1_S2_T2
-out_BUS1_S2_T3
-out_BUS1_S2_T4
-out_BUS1_S3_T0
-out_BUS1_S3_T1
-out_BUS1_S3_T2
-out_BUS1_S3_T3
-out_BUS1_S3_T4
+# out_BUS16_S1_T1
+# out_BUS16_S1_T2
+# out_BUS16_S1_T3
+# out_BUS16_S1_T4
+# out_BUS16_S2_T0
+# out_BUS16_S2_T1
+# out_BUS16_S2_T2
+# out_BUS16_S2_T3
+# out_BUS16_S2_T4
+# out_BUS16_S3_T0
+# out_BUS16_S3_T1
+# out_BUS16_S3_T2
+# out_BUS16_S3_T3
+# out_BUS16_S3_T4
+# out_BUS1_S0_T0
+# out_BUS1_S0_T1
+# out_BUS1_S0_T2
+# out_BUS1_S0_T3
+# out_BUS1_S0_T4
+# out_BUS1_S1_T0
+# out_BUS1_S1_T1
+# out_BUS1_S1_T2
+# out_BUS1_S1_T3
+# out_BUS1_S1_T4
+# out_BUS1_S2_T0
+# out_BUS1_S2_T1
+# out_BUS1_S2_T2
+# out_BUS1_S2_T3
+# out_BUS1_S2_T4
+# out_BUS1_S3_T0
+# out_BUS1_S3_T1
+# out_BUS1_S3_T2
+# out_BUS1_S3_T3
+# out_BUS1_S3_T4

@@ -64,23 +64,31 @@ def generate_equivalence_check(config):
 
         inps = []
         outs = []
+        stas = []
         
         with open(config.imap_file) as f:
 
-            in_out = False
+            phase = None
+            ST = "STATES:"
+            IN = "INPUTS:"
+            OU = "OUTPUTS:"
             
             for line in f.readlines():
                 line = line.replace(" ", "").replace("\n", "")
                 
                 if line == "":
                     continue
-                if "INPUTS:" in line:
-                    in_out = True
+                if IN in line:
+                    phase = IN
                     continue
-                if "OUTPUTS:" in line:
-                    in_out = False
+                if OU in line:
+                    phase = OU
+                    continue
+                if ST in line:
+                    phase = ST
                     continue
 
+                
                 if "#" == line[0]:
                     continue
                 
@@ -91,12 +99,16 @@ def generate_equivalence_check(config):
                     value = (line[0],line[0])
                 else:
                     value = (line[0],line[1])
-                    
-                if in_out: # INPUTS
+
+                if phase == IN:
                     inps.append(value)
-                else: # OUTPUTS
+                    continue
+                if phase == OU:
                     outs.append(value)
-                    
+                    continue
+                if phase == ST:
+                    stas.append(value)
+                    continue
                     
 
     set_vals = []
@@ -136,6 +148,9 @@ def generate_equivalence_check(config):
     for ous in outs:
         pre.append("(= %s %s)"%(curr(m_1(ous[0])), curr(m_2(ous[1]))))
 
+    for sta in stas:
+        pre.append("(= %s %s)"%(curr(m_1(sta[0])), curr(m_2(sta[1]))))
+        
     for inp in inps:
         pre.append("(= %s %s)"%(next(m_1(inp[0])), next(m_2(inp[1]))))
             
