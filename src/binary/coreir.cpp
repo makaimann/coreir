@@ -228,13 +228,13 @@ int main(int argc, char *argv[]) {
     }
   }
   else if (outExt=="smt2") {
-    modified |= c->runPasses({"removebulkconnections","flattentypes","smtlib2"});
+    modified |= c->runPasses({"rungenerators","cullgraph","wireclocks-coreir","removebulkconnections","flattentypes","flatten","smtlib2"});
     auto vpass = static_cast<Passes::SmtLib2*>(c->getPassManager()->getAnalysisPass("smtlib2"));
     
     vpass->writeToStream(*sout);
   }
   else if (outExt=="smv") {
-    modified |= c->runPasses({"removebulkconnections","flattentypes","smv"});
+    modified |= c->runPasses({"rungenerators","cullgraph","wireclocks-coreir","removebulkconnections","flattentypes","flatten","smv"});
     auto vpass = static_cast<Passes::SMV*>(c->getPassManager()->getAnalysisPass("smv"));
     
     vpass->writeToStream(*sout);
