@@ -196,7 +196,7 @@ namespace CoreIR {
 
       string state_var = SMTgetCurr(context, "state");
       string state_dec = "(declare-fun " + state_var + " () (_ BitVec " + out_p.dimstr() + "))";
-      string state_ass = assert_op("(= "+state_var+" "+SMTgetNext(context, out)+")");
+      string state_ass = assert_op("(= "+state_var+" "+SMTgetCurr(context, out)+")");
         
       string zero = getSMTbits(stoi(out_p.dimstr()), 0);
       string init = assert_op("(= "+SMTgetInit(context, out)+" "+zero+")");
@@ -217,7 +217,7 @@ namespace CoreIR {
 
       string state_var = SMTgetCurr(context, "state");
       string state_dec = "(declare-fun " + state_var + " () (_ BitVec " + out_p.dimstr() + "))";
-      string state_ass = assert_op("(= "+state_var+" "+SMTgetNext(context, out)+")");
+      string state_ass = assert_op("(= "+state_var+" "+SMTgetCurr(context, out)+")");
       
       string zero = getSMTbits(stoi(out_p.dimstr()), 0);
       string init = assert_op("(= "+SMTgetInit(context, out)+" "+zero+")");
