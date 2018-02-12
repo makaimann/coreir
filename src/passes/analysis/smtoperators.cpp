@@ -105,24 +105,24 @@ namespace CoreIR {
       input1 = SMTgetCurr(context, in1);
       input2 = SMTgetCurr(context, in2);
       output = SMTgetCurr(context, out);
-      
+
       string curr = "(and (=> (= " + input1 + " " + input2 + ") (= " + output + " #b1)) "
                          "(=> (not (= " + input1 + " " + input2 + ")) (= " + output + " #b0)))";
 
       curr = "(assert " + curr + ")";
-      
+
       input1 = SMTgetNext(context, in1);
       input2 = SMTgetNext(context, in2);
       output = SMTgetNext(context, out);
-      
+
       string next = "(and (=> (= " + input1 + " " + input2 + ") (= " + output + " #b1)) "
                          "(=> (not (= " + input1 + " " + input2 + ")) (= " + output + " #b0)))";
-      
+
       next = "(assert " + next + ")";
-      
+
       return comment + NL + curr + NL + next;
     }
-    
+
     string SMTXor(string context, SmtBVVar in1_p, SmtBVVar in2_p, SmtBVVar out_p) {
       return SMTBop(context, "Xor", "bvxor", in1_p, in2_p, out_p);
     }
@@ -327,7 +327,7 @@ namespace CoreIR {
     string SMTAshr(string context, SmtBVVar in1_p, SmtBVVar in2_p, SmtBVVar out_p) {
       return SMTBop(context, "Ashr", "bvashr", in1_p, in2_p, out_p);
     }
-    
+
     string SMTMul(string context, SmtBVVar in1_p, SmtBVVar in2_p, SmtBVVar out_p) {
       return SMTBop(context, "Mul", "bvmul", in1_p, in2_p, out_p);
     }
@@ -339,9 +339,9 @@ namespace CoreIR {
 
       string one = getSMTbits(stoi(in_p.dimstr()), -1);
 
-      string true_res; 
+      string true_res;
       string false_res;
-      
+
       true_res  = "(=> (= "+SMTgetCurr(context, in)+" "+one+") (= "+SMTgetCurr(context, out)+" #b1))";
       false_res = "(=> (not (= "+SMTgetCurr(context, in)+" "+one+")) (= "+SMTgetCurr(context, out)+" #b0))";
       string curr = assert_op("(and "+true_res+" "+false_res+")");
@@ -349,7 +349,7 @@ namespace CoreIR {
       true_res  = "(=> (= "+SMTgetNext(context, in)+" "+one+") (= "+SMTgetNext(context, out)+" #b1))";
       false_res = "(=> (not (= "+SMTgetNext(context, in)+" "+one+")) (= "+SMTgetNext(context, out)+" #b0))";
       string next = assert_op("(and "+true_res+" "+false_res+")");
-      
+
       return comment + NL + curr + NL + next;
     }
 
@@ -360,9 +360,9 @@ namespace CoreIR {
 
       string zero = getSMTbits(stoi(in_p.dimstr()), 0);
 
-      string true_res; 
+      string true_res;
       string false_res;
-      
+
       true_res  = "(=> (= "+SMTgetCurr(context, in)+" "+zero+") (= "+SMTgetCurr(context, out)+" #b0))";
       false_res = "(=> (not (= "+SMTgetCurr(context, in)+" "+zero+")) (= "+SMTgetCurr(context, out)+" #b1))";
       string curr = assert_op("(and "+true_res+" "+false_res+")");
@@ -370,7 +370,7 @@ namespace CoreIR {
       true_res  = "(=> (= "+SMTgetNext(context, in)+" "+zero+") (= "+SMTgetNext(context, out)+" #b0))";
       false_res = "(=> (not (= "+SMTgetNext(context, in)+" "+zero+")) (= "+SMTgetNext(context, out)+" #b1))";
       string next = assert_op("(and "+true_res+" "+false_res+")");
-      
+
       return comment + NL + curr + NL + next;
     }
 
@@ -378,6 +378,32 @@ namespace CoreIR {
       int dim = out_p.getDim() - in_p.getDim();
       return SMTUop(context, "Zext", "(_ zero_extend "+to_string(dim)+")", in_p, out_p);
     }
-    
+
+    // Comparators
+    string SMTUlt(string context, SmtBVVar in1_p, SmtBVVar in2_p, SmtBVVar out_p) {
+      return SMTBop(context, "Ult", "bvult", in1_p, in2_p, out_p);
+    }
+    string SMTUle(string context, SmtBVVar in1_p, SmtBVVar in2_p, SmtBVVar out_p) {
+      return SMTBop(context, "Ule", "bvule", in1_p, in2_p, out_p);
+    }
+    string SMTUgt(string context, SmtBVVar in1_p, SmtBVVar in2_p, SmtBVVar out_p) {
+      return SMTBop(context, "Ugt", "bvugt", in1_p, in2_p, out_p);
+    }
+    string SMTUge(string context, SmtBVVar in1_p, SmtBVVar in2_p, SmtBVVar out_p) {
+      return SMTBop(context, "Uge", "bvuge", in1_p, in2_p, out_p);
+    }
+    string SMTSlt(string context, SmtBVVar in1_p, SmtBVVar in2_p, SmtBVVar out_p) {
+      return SMTBop(context, "Slt", "bvslt", in1_p, in2_p, out_p);
+    }
+    string SMTSle(string context, SmtBVVar in1_p, SmtBVVar in2_p, SmtBVVar out_p) {
+      return SMTBop(context, "Sle", "bvsle", in1_p, in2_p, out_p);
+    }
+    string SMTSgt(string context, SmtBVVar in1_p, SmtBVVar in2_p, SmtBVVar out_p) {
+      return SMTBop(context, "Sgt", "bvsgt", in1_p, in2_p, out_p);
+    }
+    string SMTSge(string context, SmtBVVar in1_p, SmtBVVar in2_p, SmtBVVar out_p) {
+      return SMTBop(context, "Sge", "bvsge", in1_p, in2_p, out_p);
+    }
+
   }
 }

@@ -30,7 +30,6 @@ namespace CoreIR {
     string SMTConcat(string context, SmtBVVar in1, SmtBVVar in2, SmtBVVar out);
     string SMTReg(string context, SmtBVVar in, SmtBVVar clk, SmtBVVar out);
     string SMTRegPE(string context, SmtBVVar in, SmtBVVar clk, SmtBVVar out, SmtBVVar en);
-    string SMTMantleReg(string context, Values args, SmtBVVar I_p, SmtBVVar O_p, SmtBVVar CLK_p, SmtBVVar CLR_p, SmtBVVar CE_p, SmtBVVar RESET_p);
     string SMTCounter(string context, SmtBVVar clk, SmtBVVar en, SmtBVVar out);
     string SMTSlice(string context, SmtBVVar in, SmtBVVar out, int low, int high);
     string SMTClock(string context, SmtBVVar clk_p);
@@ -41,6 +40,16 @@ namespace CoreIR {
     string SMTOrr(string context, SmtBVVar in, SmtBVVar out);
     string SMTAndr(string context, SmtBVVar in, SmtBVVar out);
     string SMTZext(string context, SmtBVVar in, SmtBVVar out);
+    string SMTUlt(string context, SmtBVVar in0, SmtBVVar in1, SmtBVVar out);
+    string SMTUle(string context, SmtBVVar in0, SmtBVVar in1, SmtBVVar out);
+    string SMTUgt(string context, SmtBVVar in0, SmtBVVar in1, SmtBVVar out);
+    string SMTUge(string context, SmtBVVar in0, SmtBVVar in1, SmtBVVar out);
+    string SMTSlt(string context, SmtBVVar in0, SmtBVVar in1, SmtBVVar out);
+    string SMTSle(string context, SmtBVVar in0, SmtBVVar in1, SmtBVVar out);
+    string SMTSgt(string context, SmtBVVar in0, SmtBVVar in1, SmtBVVar out);
+    string SMTSge(string context, SmtBVVar in0, SmtBVVar in1, SmtBVVar out);
+
+>>>>>>> Added comparators
   }
 }
 #endif

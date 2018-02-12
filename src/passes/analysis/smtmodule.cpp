@@ -83,8 +83,7 @@ string SMTModule::toInstanceString(Instance* inst, string path) {
   }
 
   string context = path+"$";
-  string pre = "coreir.";
-  string prebit = "corebit.";
+  string pre = "";
 
   enum operation {neg_op = 1,
                   const_op,
@@ -106,48 +105,49 @@ string SMTModule::toInstanceString(Instance* inst, string path) {
                   andr_op,
                   orr_op,
                   zext_op,
-                  mantle_reg_op
+                  ult_op,
+                  ule_op,
+                  ugt_op,
+                  uge_op,
+                  slt_op,
+                  sle_op,
+                  sgt_op,
+                  sge_op
   };
 
   unordered_map<string, operation> opmap;
 
   opmap.emplace(pre+"neg", neg_op);
-  opmap.emplace(pre+"bitneg", neg_op);
   opmap.emplace(pre+"not", neg_op);
-  opmap.emplace(pre+"bitnot", neg_op);
   opmap.emplace(prebit+"not", neg_op);
   opmap.emplace(pre+"const", const_op);
-  opmap.emplace(pre+"bitconst", const_op);
   opmap.emplace(pre+"add", add_op);
   opmap.emplace(pre+"sub", sub_op);
   opmap.emplace(pre+"and", and_op);
-  opmap.emplace(pre+"bitand", and_op);
-  opmap.emplace(prebit+"and", and_op);
   opmap.emplace(pre+"or", or_op);
   opmap.emplace(pre+"eq", eq_op);
-  opmap.emplace(pre+"bitor", or_op);
   opmap.emplace(pre+"xor", xor_op);
-  opmap.emplace(pre+"bitxor", xor_op);
-  opmap.emplace(pre+"bitreg", reg_op);
   opmap.emplace(pre+"reg", reg_op);
   opmap.emplace(pre+"reg_PE", regPE_op);
   opmap.emplace(pre+"concat", concat_op);
   opmap.emplace(pre+"slice", slice_op);
   opmap.emplace(pre+"term", term_op);
   opmap.emplace(pre+"mux", mux_op);
-  opmap.emplace(prebit+"const", const_op);
-
   opmap.emplace(pre+"lshr", lshr_op);
   opmap.emplace(pre+"ashr", ashr_op);
   opmap.emplace(pre+"mul", mul_op);
-
   opmap.emplace(pre+"orr", orr_op);
   opmap.emplace(pre+"andr", andr_op);
-
+  opmap.emplace(pre+"ult", ult_op);
+  opmap.emplace(pre+"ule", ule_op);
+  opmap.emplace(pre+"ugt", ugt_op);
+  opmap.emplace(pre+"uge", uge_op);
+  opmap.emplace(pre+"slt", slt_op);
+  opmap.emplace(pre+"sle", sle_op);
+  opmap.emplace(pre+"sgt", sgt_op);
+  opmap.emplace(pre+"sge", sge_op);
   opmap.emplace(pre+"zext", zext_op);
-  
-  opmap.emplace("mantle.reg", mantle_reg_op);
-  
+
 #define var_assign(var, name) if (portstrs.find(name) != portstrs.end()) var = portstrs.find(name)->second
 
   SmtBVVar out; var_assign(out, "out");
@@ -159,18 +159,6 @@ string SMTModule::toInstanceString(Instance* inst, string path) {
   SmtBVVar sel; var_assign(sel, "sel");
   SmtBVVar clr; var_assign(clr, "clr");
   SmtBVVar rst; var_assign(rst, "rst");
-
-  // Mantle primitives
-  // Most are slightly different, except
-  // clk and CLK could be combined with tolower
-  SmtBVVar I; var_assign(I, "I");
-  SmtBVVar I0; var_assign(I, "I0");
-  SmtBVVar I1; var_assign(I, "I1");
-  SmtBVVar O; var_assign(O, "O");
-  SmtBVVar CLK; var_assign(CLK, "CLK");
-  SmtBVVar CLR; var_assign(CLR, "CLR");
-  SmtBVVar RESET; var_assign(RESET, "RESET");
-  SmtBVVar CE; var_assign(CE, "CE");
 
   switch (opmap[mname]) {
   case term_op:
@@ -234,8 +222,29 @@ string SMTModule::toInstanceString(Instance* inst, string path) {
     int hi; hi = stoi(args["hi"]->toString());
     o << SMTSlice(context, in, out, lo, hi-1);
     break;
-  case mantle_reg_op:
-    o << SMTMantleReg(context, args, I, O, CLK, CLR, CE, RESET);
+  case ult_op:
+    o << SMTUlt(context, in0, in1, out);
+    break;
+  case ule_op:
+    o << SMTUle(context, in0, in1, out);
+    break;
+  case ugt_op:
+    o << SMTUgt(context, in0, in1, out);
+    break;
+  case uge_op:
+    o << SMTUge(context, in0, in1, out);
+    break;
+  case slt_op:
+    o << SMTSlt(context, in0, in1, out);
+    break;
+  case sle_op:
+    o << SMTSle(context, in0, in1, out);
+    break;
+  case sgt_op:
+    o << SMTSgt(context, in0, in1, out);
+    break;
+  case sge_op:
+    o << SMTSge(context, in0, in1, out);
     break;
   default:
     o << "!!! UNMATCHED: " << mname << " !!!";
