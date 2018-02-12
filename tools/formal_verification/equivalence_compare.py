@@ -20,15 +20,44 @@ for line in sys.stdin:
 
         valuesmap[varname][idx] = value
 
-eqlist = []
-        
+eqlines = []
+nelines = []
+nplines = []
+
 for el in valuesmap:
-    label = "EQ"
-    if (valuesmap[el][0] != valuesmap[el][1]):
-        label = "NE"
+    line = "%s: <1>=%s, <2>=%s"%(el, valuesmap[el][0], valuesmap[el][1])
 
     if (valuesmap[el][0] is None) or (valuesmap[el][1] is None):
-        label = "NN"
+        nplines.append(line)
+        continue
 
+    if (valuesmap[el][0] != valuesmap[el][1]):
+        nelines.append(line)
+        continue
         
-    print("%s: %s, <1>=%s, <2>=%s"%(label, el, valuesmap[el][0], valuesmap[el][1]))
+    eqlines.append(line)
+
+eqlines.sort()
+nelines.sort()
+nplines.sort()
+
+eqlines.insert(0, "EQUALS")
+eqlines.insert(1, "EQ")
+
+nelines.insert(0, "NOT EQUALS")
+nelines.insert(1, "NE")
+
+nplines.insert(0, "NOT PRESENT IN BOTH SYSTEMS")
+nplines.insert(1, "NP")
+
+for lines in [nelines, nplines, eqlines]:
+    print("\n-- %s (CURRENT) --"%lines[0])
+    print("\n".join(["%s - %s"%(lines[1], x) for x in lines[2:] if "_N: " not in x]))
+    print("\n-- %s (NEXT) --"%lines[0])
+    print("\n".join(["%s - %s"%(lines[1], x) for x in lines[2:] if "_N: " in x]))
+
+
+# print("CURRENT")
+# print("\n".join([x for x in lines if "_N: " not in x]))
+# print("NEXT")
+# print("\n".join([x for x in lines if "_N: " in x]))
