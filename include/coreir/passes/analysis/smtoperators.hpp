@@ -19,6 +19,7 @@ namespace CoreIR {
     SmtBVVar SmtBVVarGetCurr(SmtBVVar var);
     string getSMTbits(unsigned, int);
     string SMTAssign(SmtBVVar vleft, SmtBVVar vright);
+    string SMTEq(string context, SmtBVVar in1, SmtBVVar in2, SmtBVVar out);
     string SMTAnd(string context, SmtBVVar in1, SmtBVVar in2, SmtBVVar out);
     string SMTOr(string context, SmtBVVar in1, SmtBVVar in2, SmtBVVar out);
     string SMTXor(string context, SmtBVVar in1, SmtBVVar in2, SmtBVVar out);
@@ -49,7 +50,6 @@ namespace CoreIR {
     string SMTSgt(string context, SmtBVVar in0, SmtBVVar in1, SmtBVVar out);
     string SMTSge(string context, SmtBVVar in0, SmtBVVar in1, SmtBVVar out);
 
->>>>>>> Added comparators
   }
 }
 #endif

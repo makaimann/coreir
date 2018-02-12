@@ -86,12 +86,12 @@ string SMTModule::toInstanceString(Instance* inst, string path) {
   string pre = "";
 
   enum operation {neg_op = 1,
+                  eq_op,
                   const_op,
                   add_op,
                   sub_op,
                   and_op,
                   or_op,
-                  eq_op,
                   xor_op,
                   reg_op,
                   regPE_op,
@@ -119,7 +119,8 @@ string SMTModule::toInstanceString(Instance* inst, string path) {
 
   opmap.emplace(pre+"neg", neg_op);
   opmap.emplace(pre+"not", neg_op);
-  opmap.emplace(prebit+"not", neg_op);
+  opmap.emplace(pre+"eq", eq_op);
+  opmap.emplace(pre+"not", neg_op);
   opmap.emplace(pre+"const", const_op);
   opmap.emplace(pre+"add", add_op);
   opmap.emplace(pre+"sub", sub_op);
@@ -166,6 +167,9 @@ string SMTModule::toInstanceString(Instance* inst, string path) {
   case neg_op:
     o << SMTNot(context, in, out);
     break;
+  case eq_op:
+    o << SMTEq(context, in0, in1, out);
+    break;
   case add_op:
     o << SMTAdd(context, in0, in1, out);
     break;
@@ -177,9 +181,6 @@ string SMTModule::toInstanceString(Instance* inst, string path) {
     break;
   case or_op:
     o << SMTOr(context, in0, in1, out);
-    break;
-  case eq_op:
-    o << SMTEq(context, in0, in1, out);
     break;
   case xor_op:
     o << SMTXor(context, in0, in1, out);

@@ -96,15 +96,7 @@ public:
     Type2Ports(t, ports);
   }
   SMTModule(Module* m) : SMTModule(m->getName(),m->getType()) {
-    string ns;
-    if(m->isGenerated()) {
-      ns = m->getGenerator()->getNamespace()->getName();
-    }
-    else
-    {
-      ns = m->getNamespace()->getName();
-    }
-    this->modname = ns + "." + m->getName();
+    this->modname = m->getName();
     const json& jmeta = m->getMetaData();
     // still using verilog prefixes -- should be okay
     if (jmeta.count("verilog") && jmeta["verilog"].count("prefix")) {
@@ -114,7 +106,7 @@ public:
     this->addParams(params,m->getModParams());
     this->addDefaults(paramDefaults,m->getDefaultModArgs());
   }
-  SMTModule(Generator* g) : modname(g->getNamespace()->getName() + "." + g->getName()), gen(g) {
+  SMTModule(Generator* g) : modname(g->getName()), gen(g) {
     const json& jmeta = g->getMetaData();
     // still using verilog prefixes -- should be fine
     if (jmeta.count("verilog") && jmeta["verilog"].count("prefix")) {
