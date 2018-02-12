@@ -55,9 +55,3 @@ for lines in [nelines, nplines, eqlines]:
     print("\n".join(["%s - %s"%(lines[1], x) for x in lines[2:] if "_N: " not in x]))
     print("\n-- %s (NEXT) --"%lines[0])
     print("\n".join(["%s - %s"%(lines[1], x) for x in lines[2:] if "_N: " in x]))
-
-
-# print("CURRENT")
-# print("\n".join([x for x in lines if "_N: " not in x]))
-# print("NEXT")
-# print("\n".join([x for x in lines if "_N: " in x]))
