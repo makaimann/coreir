@@ -10,6 +10,8 @@ class Config(object):
     outputs_list1 = None
     outputs_list2 = None
 
+    imap_file = None
+    
     def __init__(self):
         self.input_file1 = None
         self.input_file2 = None
@@ -17,6 +19,8 @@ class Config(object):
         self.inputs_list2 = None
         self.outputs_list1 = None
         self.outputs_list2 = None
+
+        self.imap_file = None
 
 def generate_equivalence_check(config):
 
@@ -28,6 +32,8 @@ def generate_equivalence_check(config):
     with open(config.input_file2) as f:
         model_2 = f.read()
 
+    if not config.imap_file:
+        
         inps1 = []
         inps2 = []
 
@@ -53,7 +59,45 @@ def generate_equivalence_check(config):
         assert(len(outs1) == len(outs2))
 
         outs = [(x1, outs2[outs1.index(x1)]) for x1 in outs1]
+
+    else:
+
+        inps = []
+        outs = []
         
+        with open(config.imap_file) as f:
+
+            in_out = False
+            
+            for line in f.readlines():
+                line = line.replace(" ", "").replace("\n", "")
+                
+                if line == "":
+                    continue
+                if "INPUTS:" in line:
+                    in_out = True
+                    continue
+                if "OUTPUTS:" in line:
+                    in_out = False
+                    continue
+
+                if "#" == line[0]:
+                    continue
+                
+                line = line.split("=")
+                value = None
+                
+                if len(line) == 1:
+                    value = (line[0],line[0])
+                else:
+                    value = (line[0],line[1])
+                    
+                if in_out: # INPUTS
+                    inps.append(value)
+                else: # OUTPUTS
+                    outs.append(value)
+                    
+                    
 
     set_vals = []
 
@@ -141,7 +185,7 @@ def parse_model(model):
                 next_vars.append(line)
             if (INIT in line):
                 init_vars.append(line)
-        elif ("set" in line):
+        elif ("(set" in line):
             setvals.append(line)
         else:
             if INIT in line:
@@ -191,26 +235,35 @@ if __name__ == "__main__":
     parser.set_defaults(input_file2=None)
     parser.add_argument('-if2', '--input-file2', metavar='input_file2', type=str, required=True,
                        help='input file 2')
+
+    parser.set_defaults(imap_file=None)
+    parser.add_argument('-m', '--imap-file', metavar='imap_file', type=str, required=False,
+                        help='input map file')    
     
     parser.set_defaults(inputs_1=None)
-    parser.add_argument('-i1', '--inputs-1', metavar='inputs_1', type=str, required=True,
+    parser.add_argument('-i1', '--inputs-1', metavar='inputs_1', type=str, required=False,
                         help='list of input variables for file 1')
 
     parser.set_defaults(inputs_2=None)
-    parser.add_argument('-i2', '--inputs-2', metavar='inputs_2', type=str, required=True,
+    parser.add_argument('-i2', '--inputs-2', metavar='inputs_2', type=str, required=False,
                         help='list of input variables for file 1')
 
     parser.set_defaults(outputs_1=None)
-    parser.add_argument('-o1', '--outputs-1', metavar='outputs_1', type=str, required=True,
+    parser.add_argument('-o1', '--outputs-1', metavar='outputs_1', type=str, required=False,
                         help='list of output variables for file 1')
 
     parser.set_defaults(outputs_2=None)
-    parser.add_argument('-o2', '--outputs-2', metavar='outputs_2', type=str, required=True,
+    parser.add_argument('-o2', '--outputs-2', metavar='outputs_2', type=str, required=False,
                         help='list of output variables for file 1')
     
     args = parser.parse_args()
 
     config = Config()
+
+    if not args.imap_file:
+        if not (args.inputs_1 and args.inputs_2 and args.outputs_1 and args.outputs_2):
+            print("Please provide input/output maps")
+            sys.exit(0)
     
     config.input_file1 = args.input_file1
     config.input_file2 = args.input_file2
@@ -218,5 +271,7 @@ if __name__ == "__main__":
     config.inputs_list2 = args.inputs_2
     config.outputs_list1 = args.outputs_1
     config.outputs_list2 = args.outputs_2
+
+    config.imap_file = args.imap_file
 
     sys.exit(generate_equivalence_check(config))
