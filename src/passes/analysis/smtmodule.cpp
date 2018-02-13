@@ -57,7 +57,7 @@ string SMTModule::toInstanceString(Instance* inst, string path) {
   }
 
   for (auto amap : inst->getModArgs()) {
-    ASSERT(args.count(amap.first)==0,"NYI Alisaaed config/genargs");
+    ASSERT(args.count(amap.first)==0,"NYI Alisaed config/modargs");
     args[amap.first] = amap.second;
   }
   vector<string> params;
@@ -189,10 +189,10 @@ string SMTModule::toInstanceString(Instance* inst, string path) {
     o << SMTConcat(context, in0, in1, out);
     break;
   case reg_op:
-    o << SMTReg(context, in, clk, out);
+    o << SMTReg(context, in, clk, out, args["init"]->toString());
     break;
   case regPE_op:
-    o << SMTRegPE(context, in, clk, out, en);
+    o << SMTRegPE(context, in, clk, out, en, args["init"]->toString());
     break;
   case const_op:
     o << SMTConst(context, out, args["value"]->toString());

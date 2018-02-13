@@ -29,8 +29,8 @@ namespace CoreIR {
     string SMTSub(string context, SmtBVVar in1, SmtBVVar in2, SmtBVVar out);
     string SMTEq(string context, SmtBVVar in1, SmtBVVar in2, SmtBVVar out);
     string SMTConcat(string context, SmtBVVar in1, SmtBVVar in2, SmtBVVar out);
-    string SMTReg(string context, SmtBVVar in, SmtBVVar clk, SmtBVVar out);
-    string SMTRegPE(string context, SmtBVVar in, SmtBVVar clk, SmtBVVar out, SmtBVVar en);
+    string SMTReg(string context, SmtBVVar in, SmtBVVar clk, SmtBVVar out, string init);
+    string SMTRegPE(string context, SmtBVVar in, SmtBVVar clk, SmtBVVar out, SmtBVVar en, string init);
     string SMTCounter(string context, SmtBVVar clk, SmtBVVar en, SmtBVVar out);
     string SMTSlice(string context, SmtBVVar in, SmtBVVar out, int low, int high);
     string SMTClock(string context, SmtBVVar clk_p);

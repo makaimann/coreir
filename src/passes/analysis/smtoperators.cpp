@@ -173,7 +173,7 @@ namespace CoreIR {
       }
       else {
         try {
-          vals = getSMTbits(stoi(out_p.dimstr()), stoi(val));
+          vals = getSMTbits(out_p.getDim(), stoi(val));
         }
         catch (std::invalid_argument& e){
           std::cerr << e.what() << std::endl;
@@ -186,7 +186,7 @@ namespace CoreIR {
       return comment + NL + curr + NL + next;
     }
 
-    string SMTReg(string context, SmtBVVar in_p, SmtBVVar clk_p, SmtBVVar out_p) {
+    string SMTReg(string context, SmtBVVar in_p, SmtBVVar clk_p, SmtBVVar out_p, string init_val) {
       // INIT: out = 0
       // TRANS: ((!clk & clk') -> (out' = in)) & (!(!clk & clk') -> (out' = out))
       string in = in_p.getPortName();
@@ -206,15 +206,14 @@ namespace CoreIR {
       string state_dec = state_curr_dec + NL + state_next_dec;
       string state_ass = state_curr_ass + NL + state_next_ass;
         
-      string zero = getSMTbits(stoi(out_p.dimstr()), 0);
-      string init = assert_op("(= "+SMTgetInit(context, out)+" "+zero+")");
+      string init = assert_op("(= "+SMTgetInit(context, out)+" "+getSMTbits(out_p.getDim(), stoi(init_val))+")");
       string trans_1 = "(=> (= (bvand (bvnot " + SMTgetCurr(context, clk) + ") " + SMTgetNext(context, clk) + ") #b1) (= " + SMTgetNext(context, out) + " " + SMTgetCurr(context, in) + "))";
       string trans_2 = "(=> (not (= (bvand (bvnot " + SMTgetCurr(context, clk) + ") " + SMTgetNext(context, clk) + ") #b1)) (= " + SMTgetNext(context, out) + " " + SMTgetCurr(context, out) + "))";
       string trans = assert_op("(and " + trans_1 + " " + trans_2 + ")");
       return comment + NL + init + NL + trans + NL + state_dec + NL + state_ass;
     }
 
-    string SMTRegPE(string context, SmtBVVar in_p, SmtBVVar clk_p, SmtBVVar out_p, SmtBVVar en_p) {
+    string SMTRegPE(string context, SmtBVVar in_p, SmtBVVar clk_p, SmtBVVar out_p, SmtBVVar en_p, string init_val) {
       // INIT: out = 0
       // TRANS: ((en & !clk & clk') -> (out' = in)) & (!(en & !clk & clk') -> (out' = out))
       string in = in_p.getPortName();
@@ -235,8 +234,7 @@ namespace CoreIR {
       string state_dec = state_curr_dec + NL + state_next_dec;
       string state_ass = state_curr_ass + NL + state_next_ass;
       
-      string zero = getSMTbits(stoi(out_p.dimstr()), 0);
-      string init = assert_op("(= "+SMTgetInit(context, out)+" "+zero+")");
+      string init = assert_op("(= "+SMTgetInit(context, out)+" "+getSMTbits(out_p.getDim(), stoi(init_val))+")");
       string trans_1 = "(=> (= (bvand " + SMTgetCurr(context, en) + " (bvand (bvnot " + SMTgetCurr(context, clk) + ") " + SMTgetNext(context, clk) + ")) #b1) (= " + SMTgetNext(context, out) + " " + SMTgetCurr(context, in) + "))";
       string trans_2 = "(=> (not (= (bvand " + SMTgetCurr(context, en) + " (bvand (bvnot " + SMTgetCurr(context, clk) + ") " + SMTgetNext(context, clk) + ")) #b1)) (= " + SMTgetNext(context, out) + " " + SMTgetCurr(context, out) + "))";
       string trans = assert_op("(and " + trans_1 + " " + trans_2 + ")");
@@ -260,8 +258,8 @@ namespace CoreIR {
       string out = out_p.getPortName();
       string comment = ";; SMTMux (in0, in1, sel, out) = (" + in0 + ", " + in1 + ", " + sel + ", " + out + ")";
 
-      string one = getSMTbits(stoi(sel_p.dimstr()), 1);
-      string zero = getSMTbits(stoi(sel_p.dimstr()), 0);
+      string one = getSMTbits(sel_p.getDim(), 1);
+      string zero = getSMTbits(sel_p.getDim(), 0);
 
       string then_bc = "(= "+SMTgetCurr(context, sel)+" "+one+")";
       string else_bc = "(= "+SMTgetCurr(context, sel)+" "+zero+")";
@@ -295,7 +293,7 @@ namespace CoreIR {
       string out = out_p.getPortName();
       string comment = ";; SMTAndr (in, out) = (" + in + ", " + out + ")";
 
-      string one = getSMTbits(stoi(in_p.dimstr()), -1);
+      string one = getSMTbits(in_p.getDim(), -1);
 
       string true_res;
       string false_res;
@@ -316,7 +314,7 @@ namespace CoreIR {
       string out = out_p.getPortName();
       string comment = ";; SMTOrr (in, out) = (" + in + ", " + out + ")";
 
-      string zero = getSMTbits(stoi(in_p.dimstr()), 0);
+      string zero = getSMTbits(in_p.getDim(), 0);
 
       string true_res;
       string false_res;
