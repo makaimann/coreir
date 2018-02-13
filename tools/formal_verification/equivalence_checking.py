@@ -65,6 +65,7 @@ def generate_equivalence_check(config):
         inps = []
         outs = []
         stas = []
+        asas = []
         
         with open(config.imap_file) as f:
 
@@ -72,6 +73,7 @@ def generate_equivalence_check(config):
             ST = "STATES:"
             IN = "INPUTS:"
             OU = "OUTPUTS:"
+            AS = "ASSIGNS:"
             
             for line in f.readlines():
                 line = line.replace(" ", "").replace("\n", "")
@@ -88,11 +90,18 @@ def generate_equivalence_check(config):
                     phase = ST
                     continue
 
+                if AS in line:
+                    phase = AS
+                    continue
+                
                 
                 if "#" == line[0]:
                     continue
-                
-                line = line.split("=")
+
+                if ":=" in line:
+                    line = line.split(":=")
+                else:
+                    line = line.split("=")
                 value = None
                 
                 if len(line) == 1:
@@ -109,8 +118,23 @@ def generate_equivalence_check(config):
                 if phase == ST:
                     stas.append(value)
                     continue
-                    
+                if phase == AS:
+                    system = line[0].split(":")[0]
+                    var = line[0].split(":")[1]
 
+                    if system == "1":
+                        var = curr(m_1(var))
+                    if system == "1N":
+                        var = next(m_1(var))
+                    if system == "2":
+                        var = curr(m_2(var))
+                    if system == "2N":
+                        var = next(m_2(var))
+                    
+                    value = line[1]
+                    asas.append((var,value))
+                    continue
+                
     set_vals = []
 
     init_vars_1 = []
@@ -165,6 +189,8 @@ def generate_equivalence_check(config):
     cond = "(and %s (not %s))"%(precond, poscond)
 
     print("(assert %s)"%cond)
+
+    print("\n".join(["(assert (= %s %s))"%(x[0],x[1]) for x in asas]))
 
     print("(check-sat)")
 

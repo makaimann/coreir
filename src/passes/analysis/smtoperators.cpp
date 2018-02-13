@@ -194,9 +194,17 @@ namespace CoreIR {
       string out = out_p.getPortName();
       string comment = ";; SMTReg (in, clk, out) = (" + in + ", " + clk + ", " + out + ")";
 
-      string state_var = SMTgetCurr(context, "state");
-      string state_dec = "(declare-fun " + state_var + " () (_ BitVec " + out_p.dimstr() + "))";
-      string state_ass = assert_op("(= "+state_var+" "+SMTgetCurr(context, out)+")");
+      string state_curr_var = SMTgetCurr(context, "state");
+      string state_curr_dec = "(declare-fun " + state_curr_var + " () (_ BitVec " + out_p.dimstr() + "))";
+      string state_curr_ass = assert_op("(= "+state_curr_var+" "+SMTgetCurr(context, out)+")");
+
+      string state_next_var = SMTgetNext(context, "state");
+      string state_next_dec = "(declare-fun " + state_next_var + " () (_ BitVec " + out_p.dimstr() + "))";
+      string state_next_ass = assert_op("(= "+state_next_var+" "+SMTgetNext(context, out)+")");
+
+      string state_var = state_curr_var + NL + state_next_var;
+      string state_dec = state_curr_dec + NL + state_next_dec;
+      string state_ass = state_curr_ass + NL + state_next_ass;
         
       string zero = getSMTbits(stoi(out_p.dimstr()), 0);
       string init = assert_op("(= "+SMTgetInit(context, out)+" "+zero+")");
@@ -215,9 +223,17 @@ namespace CoreIR {
       string en = en_p.getPortName();
       string comment = ";; SMTRegPE (in, clk, out, en) = (" + in + ", " + clk + ", " + out + ", " + en + ")";
 
-      string state_var = SMTgetCurr(context, "state");
-      string state_dec = "(declare-fun " + state_var + " () (_ BitVec " + out_p.dimstr() + "))";
-      string state_ass = assert_op("(= "+state_var+" "+SMTgetCurr(context, out)+")");
+      string state_curr_var = SMTgetCurr(context, "state");
+      string state_curr_dec = "(declare-fun " + state_curr_var + " () (_ BitVec " + out_p.dimstr() + "))";
+      string state_curr_ass = assert_op("(= "+state_curr_var+" "+SMTgetCurr(context, out)+")");
+
+      string state_next_var = SMTgetNext(context, "state");
+      string state_next_dec = "(declare-fun " + state_next_var + " () (_ BitVec " + out_p.dimstr() + "))";
+      string state_next_ass = assert_op("(= "+state_next_var+" "+SMTgetNext(context, out)+")");
+
+      string state_var = state_curr_var + NL + state_next_var;
+      string state_dec = state_curr_dec + NL + state_next_dec;
+      string state_ass = state_curr_ass + NL + state_next_ass;
       
       string zero = getSMTbits(stoi(out_p.dimstr()), 0);
       string init = assert_op("(= "+SMTgetInit(context, out)+" "+zero+")");
