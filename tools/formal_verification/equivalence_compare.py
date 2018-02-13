@@ -3,6 +3,10 @@ import sys
 valuesmap = {}
 
 for line in sys.stdin:
+    if "unsat" in line:
+        print("SYSTEMS ARE EQUIVALENT")
+        quit(0)
+    
     if " = " in line:
         if "<1>" in line:
             idx = 0
